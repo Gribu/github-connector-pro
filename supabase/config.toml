@@ -1,1 +1,4 @@
 project_id = "gqqgaumrostovtwjghye"
+
+[functions.process-diagnostic]
+verify_jwt = false
