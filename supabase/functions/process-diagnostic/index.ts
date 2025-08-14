@@ -24,11 +24,30 @@ serve(async (req) => {
 
     console.log('Received diagnostic data:', { nombre, email, telefono });
 
+    // Enhanced input validation
     if (!nombre || !email || 
         claridad_direccion === undefined || dominio_emocional === undefined ||
         energia_enfoque === undefined || autoliderazgo === undefined ||
         influencia_comunicacion === undefined || conexion_proposito === undefined) {
       throw new Error('Missing required fields')
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      throw new Error('Invalid email format')
+    }
+
+    // Validate phone format if provided
+    if (telefono && !/^[\d\s\-\+\(\)]+$/.test(telefono)) {
+      throw new Error('Invalid phone format')
+    }
+
+    // Validate score ranges (assuming 0-10 scale)
+    const scoreValues = [claridad_direccion, dominio_emocional, energia_enfoque, 
+                        autoliderazgo, influencia_comunicacion, conexion_proposito]
+    if (scoreValues.some(score => isNaN(Number(score)) || Number(score) < 0 || Number(score) > 10)) {
+      throw new Error('Invalid score values. Scores must be between 0 and 10')
     }
 
     const scores = {
@@ -62,10 +81,16 @@ serve(async (req) => {
 
     console.log('Found training:', training);
 
+    // Generate secure submission ID
+    const submissionId = crypto.randomUUID()
+
     const { data: insertedRecord, error: insertError } = await supabase
       .from('respuestas_diagnostico')
       .insert({
-        nombre, email, telefono: telefono || null,
+        nombre: nombre.trim(), 
+        email: email.toLowerCase().trim(), 
+        telefono: telefono?.trim() || null,
+        submission_id: submissionId,
         claridad_direccion: scores.claridad_direccion,
         dominio_emocional: scores.dominio_emocional,
         energia_enfoque: scores.energia_enfoque,
@@ -89,7 +114,7 @@ serve(async (req) => {
       JSON.stringify({ 
         success: true, 
         recordId: insertedRecord.id,
-        resultsUrl: `${Deno.env.get('SITE_URL') || 'https://your-site.lovable.app'}/resultados?id=${insertedRecord.id}`,
+        resultsUrl: `${Deno.env.get('SITE_URL') || 'https://your-site.lovable.app'}/resultados?email=${encodeURIComponent(insertedRecord.email)}&submissionId=${encodeURIComponent(submissionId)}`,
         areaToImprove: areaWithLowestScore,
         recommendedTraining: training.nombre_entrenamiento
       }),

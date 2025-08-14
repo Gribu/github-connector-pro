@@ -22,34 +22,37 @@ export const useDiagnosticResults = (email: string | null, id: string | null, su
 
   useEffect(() => {
     const fetchResults = async () => {
-      if (!email || !id || !submissionId) {
+      if (!email || !submissionId) {
         setError('Parámetros de URL incompletos');
         setLoading(false);
         return;
       }
 
       try {
-        // Simulated data for development - replace with actual API call
-        const mockData: DiagnosticData = {
-          email: email,
-          claridad_direccion: Math.random() * 10,
-          dominio_emocional: Math.random() * 10,
-          energia_enfoque: Math.random() * 10,
-          autoliderazgo: Math.random() * 10,
-          influencia_comunicacion: Math.random() * 10,
-          conexion_proposito: Math.random() * 10,
-          area_mas_baja: 'dominio_emocional',
-          entrenamientos_recomendados: {
-            nombre_entrenamiento: 'Aprende a controlar lo que te frena',
-            link_entrenamiento: 'https://entrenamiento.com/emociones'
+        // Fetch data from secure edge function
+        const response = await fetch(
+          `https://gqqgaumrostovtwjghye.supabase.co/functions/v1/get-diagnostic-results?email=${encodeURIComponent(email)}&submissionId=${encodeURIComponent(submissionId)}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            }
           }
-        };
+        );
 
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        if (!response.ok) {
+          throw new Error('Error al obtener los resultados');
+        }
+
+        const result = await response.json();
         
-        setData(mockData);
+        if (!result.success) {
+          throw new Error(result.error || 'Error al cargar los datos');
+        }
+
+        setData(result.data);
       } catch (err) {
+        console.error('Error fetching diagnostic results:', err);
         setError('Error al cargar los resultados del diagnóstico');
       } finally {
         setLoading(false);
@@ -57,7 +60,7 @@ export const useDiagnosticResults = (email: string | null, id: string | null, su
     };
 
     fetchResults();
-  }, [email, id, submissionId]);
+  }, [email, submissionId]);
 
   return { data, loading, error };
 };

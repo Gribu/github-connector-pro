@@ -2,3 +2,6 @@ project_id = "gqqgaumrostovtwjghye"
 
 [functions.process-diagnostic]
 verify_jwt = false
+
+[functions.get-diagnostic-results]
+verify_jwt = false
