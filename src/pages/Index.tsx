@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useEffect } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useEffect, useState } from "react";
 import { 
   Eye, 
   Heart, 
@@ -14,6 +15,7 @@ import {
 import ExamplePieChart from "@/components/ExamplePieChart";
 
 const Index = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   useEffect(() => {
     // Cargar script de Tally
     const script = document.createElement('script');
@@ -23,11 +25,8 @@ const Index = () => {
     document.body.appendChild(script);
   }, []);
 
-  const scrollToForm = () => {
-    const formSection = document.getElementById('formulario');
-    if (formSection) {
-      formSection.scrollIntoView({ behavior: 'smooth' });
-    }
+  const openDiagnosticForm = () => {
+    setIsDialogOpen(true);
   };
 
   const pillars = [
@@ -112,9 +111,9 @@ const Index = () => {
             </div>
             
             <Button 
-              onClick={scrollToForm}
+              onClick={openDiagnosticForm}
               size="lg"
-              className="bg-warning hover:bg-warning/90 text-primary font-montserrat font-bold px-10 py-6 text-lg rounded-full shadow-2xl hover:shadow-warning/25 transition-all duration-300 transform hover:scale-105"
+              className="bg-warning hover:bg-warning/90 text-warning-foreground font-montserrat font-bold px-10 py-6 text-lg rounded-full shadow-2xl hover:shadow-warning/25 transition-all duration-300 transform hover:scale-105"
             >
               Hacer mi diagnóstico
               <ArrowDown className="ml-3 h-6 w-6" />
@@ -136,9 +135,9 @@ const Index = () => {
                 Descubre tu pilar más débil y accede a un entrenamiento gratuito para fortalecerlo.
               </p>
               <Button 
-                onClick={scrollToForm}
+                onClick={openDiagnosticForm}
                 size="lg"
-                className="bg-warning hover:bg-warning/90 text-primary font-montserrat font-bold px-10 py-6 text-lg rounded-full shadow-2xl hover:shadow-warning/25 transition-all duration-300 transform hover:scale-105"
+                className="bg-warning hover:bg-warning/90 text-warning-foreground font-montserrat font-bold px-10 py-6 text-lg rounded-full shadow-2xl hover:shadow-warning/25 transition-all duration-300 transform hover:scale-105"
               >
                 Hacer mi diagnóstico
                 <ArrowDown className="ml-3 h-6 w-6" />
@@ -159,13 +158,13 @@ const Index = () => {
                 </div>
                 
                 {/* Floating Pill Elements */}
-                <div className="absolute -top-4 -left-4 bg-secondary text-primary px-4 py-2 rounded-full text-sm font-semibold font-poppins">
+                <div className="absolute -top-4 -left-4 bg-secondary text-secondary-foreground px-4 py-2 rounded-full text-sm font-semibold font-poppins">
                   Claridad Mental
                 </div>
-                <div className="absolute top-4 -right-12 bg-accent text-white px-3 py-1.5 rounded-full text-xs font-semibold font-poppins">
+                <div className="absolute top-4 -right-12 bg-accent text-accent-foreground px-3 py-1.5 rounded-full text-xs font-semibold font-poppins">
                   Energía Personal
                 </div>
-                <div className="absolute -bottom-4 left-8 bg-warning text-primary px-4 py-2 rounded-full text-sm font-semibold font-poppins">
+                <div className="absolute -bottom-4 left-8 bg-warning text-warning-foreground px-4 py-2 rounded-full text-sm font-semibold font-poppins">
                   Dominio Emocional
                 </div>
               </div>
@@ -246,24 +245,20 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Formulario Embebido */}
-      <section id="formulario" className="py-20 px-4 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-montserrat font-bold text-foreground mb-6">
-              Completa tu diagnóstico
-            </h2>
-            <p className="text-lg md:text-xl text-muted-foreground font-poppins max-w-2xl mx-auto">
-              Responde con honestidad para obtener un resultado preciso y útil
-            </p>
-          </div>
-
-          <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border-2 border-gradient-to-r from-primary/20 to-secondary/20">
+      {/* Formulario Popup */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-montserrat font-bold text-center mb-4">
+              Completa tu Diagnóstico de Liderazgo Mental
+            </DialogTitle>
+          </DialogHeader>
+          <div className="mt-4">
             <iframe 
               data-tally-src="https://tally.so/embed/mV6oJa?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" 
               loading="lazy"
               width="100%" 
-              height="448" 
+              height="600" 
               frameBorder={0} 
               marginHeight={0} 
               marginWidth={0} 
@@ -271,8 +266,8 @@ const Index = () => {
               className="w-full"
             ></iframe>
           </div>
-        </div>
-      </section>
+        </DialogContent>
+      </Dialog>
 
       {/* Footer */}
       <footer className="py-16 px-4 bg-primary">
