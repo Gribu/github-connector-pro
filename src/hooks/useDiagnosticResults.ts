@@ -22,23 +22,24 @@ export const useDiagnosticResults = (email: string | null, id: string | null, su
 
   useEffect(() => {
     const fetchResults = async () => {
-      if (!email || !submissionId) {
-        setError('Parámetros de URL incompletos');
+      if (!email) {
+        setError('Email requerido');
         setLoading(false);
         return;
       }
 
       try {
         // Fetch data from secure edge function
-        const response = await fetch(
-          `https://gqqgaumrostovtwjghye.supabase.co/functions/v1/get-diagnostic-results?email=${encodeURIComponent(email)}&submissionId=${encodeURIComponent(submissionId)}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            }
+        const url = submissionId 
+          ? `https://gqqgaumrostovtwjghye.supabase.co/functions/v1/get-diagnostic-results?email=${encodeURIComponent(email)}&submissionId=${encodeURIComponent(submissionId)}`
+          : `https://gqqgaumrostovtwjghye.supabase.co/functions/v1/get-diagnostic-results?email=${encodeURIComponent(email)}`;
+        
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
           }
-        );
+        });
 
         if (!response.ok) {
           throw new Error('Error al obtener los resultados');

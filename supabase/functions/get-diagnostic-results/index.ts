@@ -24,9 +24,9 @@ serve(async (req) => {
     console.log('Getting results for:', { email, submissionId });
 
     // Validate input parameters
-    if (!email || !submissionId) {
+    if (!email) {
       return new Response(
-        JSON.stringify({ error: 'Email and submissionId are required' }),
+        JSON.stringify({ error: 'Email is required' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
@@ -41,7 +41,7 @@ serve(async (req) => {
     }
 
     // Use service role to bypass RLS and fetch specific record
-    const { data: diagnosticResult, error: diagnosticError } = await supabase
+    let query = supabase
       .from('respuestas_diagnostico')
       .select(`
         *,
@@ -50,9 +50,17 @@ serve(async (req) => {
           link_entrenamiento
         )
       `)
-      .eq('email', email)
-      .eq('submission_id', submissionId)
-      .single()
+      .eq('email', email);
+
+    // If submissionId is provided, use it for more specific lookup
+    if (submissionId) {
+      query = query.eq('submission_id', submissionId);
+    } else {
+      // Get the most recent result for this email
+      query = query.order('fecha_respuesta', { ascending: false }).limit(1);
+    }
+
+    const { data: diagnosticResult, error: diagnosticError } = await query.single()
 
     if (diagnosticError || !diagnosticResult) {
       console.error('Diagnostic fetch error:', diagnosticError);
