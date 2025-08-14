@@ -45,7 +45,7 @@ serve(async (req) => {
       .from('respuestas_diagnostico')
       .select(`
         *,
-        entrenamientos_recomendados!inner(
+        entrenamientos_recomendados(
           nombre_entrenamiento,
           link_entrenamiento
         )
@@ -62,10 +62,16 @@ serve(async (req) => {
 
     const { data: diagnosticResult, error: diagnosticError } = await query.single()
 
+    console.log('Database query result:', { diagnosticResult, diagnosticError });
+
     if (diagnosticError || !diagnosticResult) {
       console.error('Diagnostic fetch error:', diagnosticError);
       return new Response(
-        JSON.stringify({ error: 'Diagnostic results not found' }),
+        JSON.stringify({ 
+          success: false,
+          error: 'Diagnostic results not found',
+          details: diagnosticError?.message || 'No data found'
+        }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }

@@ -29,10 +29,14 @@ export const useDiagnosticResults = (email: string | null, id: string | null, su
       }
 
       try {
+        console.log('Fetching diagnostic results for email:', email, 'submissionId:', submissionId);
+        
         // Fetch data from secure edge function
         const url = submissionId 
           ? `https://gqqgaumrostovtwjghye.supabase.co/functions/v1/get-diagnostic-results?email=${encodeURIComponent(email)}&submissionId=${encodeURIComponent(submissionId)}`
           : `https://gqqgaumrostovtwjghye.supabase.co/functions/v1/get-diagnostic-results?email=${encodeURIComponent(email)}`;
+        
+        console.log('Calling URL:', url);
         
         const response = await fetch(url, {
           method: 'GET',
@@ -41,16 +45,24 @@ export const useDiagnosticResults = (email: string | null, id: string | null, su
           }
         });
 
+        console.log('Response status:', response.status);
+        console.log('Response ok:', response.ok);
+
         if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Response error:', errorText);
           throw new Error('Error al obtener los resultados');
         }
 
         const result = await response.json();
+        console.log('Response result:', result);
         
         if (!result.success) {
+          console.error('Result error:', result.error);
           throw new Error(result.error || 'Error al cargar los datos');
         }
 
+        console.log('Setting data:', result.data);
         setData(result.data);
       } catch (err) {
         console.error('Error fetching diagnostic results:', err);
