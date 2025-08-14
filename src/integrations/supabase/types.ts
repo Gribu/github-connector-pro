@@ -14,7 +14,78 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      entrenamientos_recomendados: {
+        Row: {
+          area: string
+          id: string
+          link_entrenamiento: string
+          nombre_entrenamiento: string
+        }
+        Insert: {
+          area: string
+          id?: string
+          link_entrenamiento: string
+          nombre_entrenamiento: string
+        }
+        Update: {
+          area?: string
+          id?: string
+          link_entrenamiento?: string
+          nombre_entrenamiento?: string
+        }
+        Relationships: []
+      }
+      respuestas_diagnostico: {
+        Row: {
+          area_mas_baja: string
+          autoliderazgo: number
+          claridad_direccion: number
+          conexion_proposito: number
+          dominio_emocional: number
+          email: string
+          energia_enfoque: number
+          fecha_respuesta: string
+          id: string
+          id_entrenamiento: string | null
+          influencia_comunicacion: number
+          nombre: string
+          submission_id: string | null
+          telefono: string | null
+        }
+        Insert: {
+          area_mas_baja: string
+          autoliderazgo: number
+          claridad_direccion: number
+          conexion_proposito: number
+          dominio_emocional: number
+          email: string
+          energia_enfoque: number
+          fecha_respuesta?: string
+          id?: string
+          id_entrenamiento?: string | null
+          influencia_comunicacion: number
+          nombre: string
+          submission_id?: string | null
+          telefono?: string | null
+        }
+        Update: {
+          area_mas_baja?: string
+          autoliderazgo?: number
+          claridad_direccion?: number
+          conexion_proposito?: number
+          dominio_emocional?: number
+          email?: string
+          energia_enfoque?: number
+          fecha_respuesta?: string
+          id?: string
+          id_entrenamiento?: string | null
+          influencia_comunicacion?: number
+          nombre?: string
+          submission_id?: string | null
+          telefono?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
