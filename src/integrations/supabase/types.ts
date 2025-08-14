@@ -49,7 +49,7 @@ export type Database = {
           id_entrenamiento: string | null
           influencia_comunicacion: number
           nombre: string
-          submission_id: string | null
+          submission_id: string
           telefono: string | null
         }
         Insert: {
@@ -65,7 +65,7 @@ export type Database = {
           id_entrenamiento?: string | null
           influencia_comunicacion: number
           nombre: string
-          submission_id?: string | null
+          submission_id?: string
           telefono?: string | null
         }
         Update: {
@@ -81,7 +81,7 @@ export type Database = {
           id_entrenamiento?: string | null
           influencia_comunicacion?: number
           nombre?: string
-          submission_id?: string | null
+          submission_id?: string
           telefono?: string | null
         }
         Relationships: []
