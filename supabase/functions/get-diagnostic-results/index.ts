@@ -22,7 +22,6 @@ serve(async (req) => {
     const submissionId = url.searchParams.get('submission_id')
 
     console.log('Getting results for:', { email, submissionId });
-    console.log('URL searchParams:', url.searchParams.toString());
 
     // Validate input parameters
     if (!email) {
@@ -41,53 +40,57 @@ serve(async (req) => {
       )
     }
 
-    // Use service role to bypass RLS and fetch specific record
+    // Get diagnostic results - simple query first
     let query = supabase
       .from('respuestas_diagnostico')
       .select('*')
       .eq('email', email);
 
-    // If submissionId is provided, use it for more specific lookup
     if (submissionId) {
       query = query.eq('submission_id', submissionId);
     } else {
-      // Get the most recent result for this email
       query = query.order('fecha_respuesta', { ascending: false }).limit(1);
     }
 
-    const { data: diagnosticResult, error: diagnosticError } = await query.single()
+    const { data: diagnosticResult, error: diagnosticError } = await query.maybeSingle()
 
-    console.log('Database query result:', { diagnosticResult, diagnosticError });
+    console.log('Diagnostic query result:', { data: diagnosticResult, error: diagnosticError });
 
-    if (diagnosticError || !diagnosticResult) {
+    if (diagnosticError) {
       console.error('Diagnostic fetch error:', diagnosticError);
       return new Response(
         JSON.stringify({ 
           success: false,
-          error: 'Diagnostic results not found',
-          details: diagnosticError?.message || 'No data found'
+          error: 'Database error',
+          details: diagnosticError.message
+        }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    if (!diagnosticResult) {
+      return new Response(
+        JSON.stringify({ 
+          success: false,
+          error: 'No diagnostic results found for this email'
         }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
-    // Now fetch the training recommendation separately using the id_entrenamiento
+    // Get training data if available
     let trainingData = null;
     if (diagnosticResult.id_entrenamiento) {
-      const { data: training, error: trainingError } = await supabase
+      const { data: training } = await supabase
         .from('entrenamientos_recomendados')
         .select('nombre_entrenamiento, link_entrenamiento')
         .eq('id', diagnosticResult.id_entrenamiento)
-        .single();
+        .maybeSingle();
       
-      if (!trainingError && training) {
-        trainingData = training;
-      }
+      trainingData = training;
     }
 
-    console.log('Found diagnostic result:', diagnosticResult.id);
-
-    // Return the secure data
+    // Return the data
     return new Response(
       JSON.stringify({
         success: true,
@@ -109,7 +112,11 @@ serve(async (req) => {
   } catch (error) {
     console.error('Function error:', error);
     return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
+      JSON.stringify({ 
+        success: false,
+        error: 'Internal server error',
+        details: error.message 
+      }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }
