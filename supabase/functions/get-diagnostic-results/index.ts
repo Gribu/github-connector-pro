@@ -44,13 +44,7 @@ serve(async (req) => {
     // Use service role to bypass RLS and fetch specific record
     let query = supabase
       .from('respuestas_diagnostico')
-      .select(`
-        *,
-        entrenamientos_recomendados(
-          nombre_entrenamiento,
-          link_entrenamiento
-        )
-      `)
+      .select('*')
       .eq('email', email);
 
     // If submissionId is provided, use it for more specific lookup
@@ -77,6 +71,20 @@ serve(async (req) => {
       )
     }
 
+    // Now fetch the training recommendation separately using the id_entrenamiento
+    let trainingData = null;
+    if (diagnosticResult.id_entrenamiento) {
+      const { data: training, error: trainingError } = await supabase
+        .from('entrenamientos_recomendados')
+        .select('nombre_entrenamiento, link_entrenamiento')
+        .eq('id', diagnosticResult.id_entrenamiento)
+        .single();
+      
+      if (!trainingError && training) {
+        trainingData = training;
+      }
+    }
+
     console.log('Found diagnostic result:', diagnosticResult.id);
 
     // Return the secure data
@@ -92,7 +100,7 @@ serve(async (req) => {
           influencia_comunicacion: diagnosticResult.influencia_comunicacion,
           conexion_proposito: diagnosticResult.conexion_proposito,
           area_mas_baja: diagnosticResult.area_mas_baja,
-          entrenamientos_recomendados: diagnosticResult.entrenamientos_recomendados
+          entrenamientos_recomendados: trainingData ? [trainingData] : []
         }
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
