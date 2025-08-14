@@ -84,7 +84,15 @@ export type Database = {
           submission_id?: string
           telefono?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_respuestas_diagnostico_entrenamiento"
+            columns: ["id_entrenamiento"]
+            isOneToOne: false
+            referencedRelation: "entrenamientos_recomendados"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
