@@ -33,7 +33,7 @@ export const useDiagnosticResults = (email: string | null, id: string | null, su
         
         // Fetch data from secure edge function
         const url = submissionId 
-          ? `https://gqqgaumrostovtwjghye.supabase.co/functions/v1/get-diagnostic-results?email=${encodeURIComponent(email)}&submissionId=${encodeURIComponent(submissionId)}`
+          ? `https://gqqgaumrostovtwjghye.supabase.co/functions/v1/get-diagnostic-results?email=${encodeURIComponent(email)}&submission_id=${encodeURIComponent(submissionId)}`
           : `https://gqqgaumrostovtwjghye.supabase.co/functions/v1/get-diagnostic-results?email=${encodeURIComponent(email)}`;
         
         console.log('Calling URL:', url);

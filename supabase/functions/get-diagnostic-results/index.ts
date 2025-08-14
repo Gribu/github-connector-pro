@@ -19,9 +19,10 @@ serve(async (req) => {
 
     const url = new URL(req.url)
     const email = url.searchParams.get('email')
-    const submissionId = url.searchParams.get('submissionId')
+    const submissionId = url.searchParams.get('submission_id')
 
     console.log('Getting results for:', { email, submissionId });
+    console.log('URL searchParams:', url.searchParams.toString());
 
     // Validate input parameters
     if (!email) {
