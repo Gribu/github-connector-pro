@@ -97,6 +97,16 @@ const Index = () => {
             <p className="text-lg md:text-xl text-white/90 mb-8 font-poppins font-light leading-relaxed">
               Descubre tu pilar más débil y accede a un entrenamiento gratuito para fortalecerlo.
             </p>
+            <Button 
+              data-tally-open="mV6oJa" 
+              data-tally-emoji-text="👋" 
+              data-tally-emoji-animation="wave"
+              size="lg"
+              className="bg-warning hover:bg-warning/90 text-warning-foreground font-montserrat font-bold px-10 py-6 text-lg rounded-full shadow-2xl hover:shadow-warning/25 transition-all duration-300 transform hover:scale-105 mb-8"
+            >
+              Hacer mi diagnóstico
+              <ArrowDown className="ml-3 h-6 w-6" />
+            </Button>
             
             {/* Chart for mobile */}
             <div className="relative flex justify-center mb-8">
@@ -122,9 +132,19 @@ const Index = () => {
                 </span>
                 como emprendedor?
               </h1>
-              <p className="text-lg md:text-xl lg:text-2xl text-white/90 mb-8 font-poppins font-light leading-relaxed">
-                Descubre tu pilar más débil y accede a un entrenamiento gratuito para fortalecerlo.
-              </p>
+            <p className="text-lg md:text-xl lg:text-2xl text-white/90 mb-8 font-poppins font-light leading-relaxed">
+              Descubre tu pilar más débil y accede a un entrenamiento gratuito para fortalecerlo.
+            </p>
+            <Button 
+              data-tally-open="mV6oJa" 
+              data-tally-emoji-text="👋" 
+              data-tally-emoji-animation="wave"
+              size="lg"
+              className="bg-warning hover:bg-warning/90 text-warning-foreground font-montserrat font-bold px-10 py-6 text-lg rounded-full shadow-2xl hover:shadow-warning/25 transition-all duration-300 transform hover:scale-105"
+            >
+              Hacer mi diagnóstico
+              <ArrowDown className="ml-3 h-6 w-6" />
+            </Button>
             </div>
 
             {/* Right Column - Visual Element */}
@@ -223,7 +243,9 @@ const Index = () => {
             </p>
             <div className="mt-8 flex justify-center">
               <Button 
-                onClick={openDiagnosticForm}
+                data-tally-open="mV6oJa" 
+                data-tally-emoji-text="👋" 
+                data-tally-emoji-animation="wave"
                 size="lg"
                 className="bg-warning hover:bg-warning/90 text-warning-foreground font-montserrat font-bold px-10 py-6 text-lg rounded-full shadow-2xl hover:shadow-warning/25 transition-all duration-300 transform hover:scale-105"
               >
