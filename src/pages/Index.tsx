@@ -12,7 +12,7 @@ import {
   ArrowDown,
   ChevronDown
 } from "lucide-react";
-import ExamplePieChart from "@/components/ExamplePieChart";
+import ExampleRadarChart from "@/components/ExampleRadarChart";
 
 const Index = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -102,22 +102,13 @@ const Index = () => {
             <div className="relative flex justify-center mb-8">
               <div className="w-80 h-80 bg-white/10 backdrop-blur-sm rounded-3xl flex flex-col items-center justify-center border border-white/20 p-6">
                 <div className="w-full h-64 mb-4">
-                  <ExamplePieChart />
+                  <ExampleRadarChart />
                 </div>
                 <p className="text-white/90 font-roboto text-sm text-center">
                   Ejemplo de tu diagnóstico personalizado
                 </p>
               </div>
             </div>
-            
-            <Button 
-              onClick={openDiagnosticForm}
-              size="lg"
-              className="bg-warning hover:bg-warning/90 text-warning-foreground font-montserrat font-bold px-10 py-6 text-lg rounded-full shadow-2xl hover:shadow-warning/25 transition-all duration-300 transform hover:scale-105"
-            >
-              Hacer mi diagnóstico
-              <ArrowDown className="ml-3 h-6 w-6" />
-            </Button>
           </div>
 
           {/* Desktop Layout */}
@@ -134,23 +125,15 @@ const Index = () => {
               <p className="text-lg md:text-xl lg:text-2xl text-white/90 mb-8 font-poppins font-light leading-relaxed">
                 Descubre tu pilar más débil y accede a un entrenamiento gratuito para fortalecerlo.
               </p>
-              <Button 
-                onClick={openDiagnosticForm}
-                size="lg"
-                className="bg-warning hover:bg-warning/90 text-warning-foreground font-montserrat font-bold px-10 py-6 text-lg rounded-full shadow-2xl hover:shadow-warning/25 transition-all duration-300 transform hover:scale-105"
-              >
-                Hacer mi diagnóstico
-                <ArrowDown className="ml-3 h-6 w-6" />
-              </Button>
             </div>
 
             {/* Right Column - Visual Element */}
             <div className="relative flex justify-center lg:justify-end">
               <div className="relative">
-                {/* Pie Chart Example */}
+                {/* Radar Chart Example */}
                 <div className="w-80 h-80 lg:w-96 lg:h-96 bg-white/10 backdrop-blur-sm rounded-3xl flex flex-col items-center justify-center border border-white/20 p-6">
                   <div className="w-full h-64 mb-4">
-                    <ExamplePieChart />
+                    <ExampleRadarChart />
                   </div>
                   <p className="text-white/90 font-roboto text-sm text-center">
                     Ejemplo de tu diagnóstico personalizado
@@ -239,7 +222,14 @@ const Index = () => {
               Tu puntaje por pilar, tu área más débil y acceso a un entrenamiento personalizado para empezar a transformarte.
             </p>
             <div className="mt-8 flex justify-center">
-              <ChevronDown className="h-10 w-10 text-primary animate-bounce" />
+              <Button 
+                onClick={openDiagnosticForm}
+                size="lg"
+                className="bg-warning hover:bg-warning/90 text-warning-foreground font-montserrat font-bold px-10 py-6 text-lg rounded-full shadow-2xl hover:shadow-warning/25 transition-all duration-300 transform hover:scale-105"
+              >
+                Hacer mi diagnóstico
+                <ArrowDown className="ml-3 h-6 w-6" />
+              </Button>
             </div>
           </div>
         </div>
