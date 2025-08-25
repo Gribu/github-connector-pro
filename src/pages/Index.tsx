@@ -70,16 +70,8 @@ const Index = () => {
           <img 
             src="/lovable-uploads/b4013c2e-b832-4574-be32-050289f8d891.png" 
             alt="OPTIMUS Logo" 
-            className="w-12 h-12 mr-4"
+            className="w-16 h-16"
           />
-          <div>
-            <div className="text-white font-montserrat font-bold text-2xl tracking-wide">
-              OPTIMUS
-            </div>
-            <div className="text-white/80 font-poppins text-sm font-light">
-              EL SOFTWARE PARA TU MENTE
-            </div>
-          </div>
         </div>
       </header>
 
@@ -292,20 +284,12 @@ const Index = () => {
       <footer className="py-16 px-4 bg-primary">
         <div className="max-w-6xl mx-auto text-center">
           <div className="mb-8">
-            <div className="flex items-center justify-center mb-6">
+            <div className="flex justify-center mb-6">
               <img 
                 src="/lovable-uploads/b4013c2e-b832-4574-be32-050289f8d891.png" 
                 alt="OPTIMUS Logo" 
-                className="w-16 h-16 mr-4"
+                className="w-20 h-20"
               />
-              <div>
-                <div className="text-white font-montserrat font-bold text-3xl mb-1">
-                  OPTIMUS
-                </div>
-                <div className="text-white/80 font-poppins text-lg font-light">
-                  EL SOFTWARE PARA TU MENTE
-                </div>
-              </div>
             </div>
             <p className="text-white/70 text-base font-poppins max-w-2xl mx-auto leading-relaxed">
               Una herramienta de Optimus – El software para tu mente. 
