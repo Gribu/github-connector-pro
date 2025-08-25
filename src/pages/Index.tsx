@@ -70,7 +70,7 @@ const Index = () => {
           <img 
             src="/lovable-uploads/b4013c2e-b832-4574-be32-050289f8d891.png" 
             alt="OPTIMUS Logo" 
-            className="h-10 w-auto"
+            className="w-24 h-24"
           />
         </div>
       </header>
@@ -287,6 +287,8 @@ const Index = () => {
             <div className="flex justify-center mb-6">
               <img 
                 src="/lovable-uploads/b4013c2e-b832-4574-be32-050289f8d891.png" 
+                alt="OPTIMUS Logo" 
+                className="w-32 h-32"
               />
             </div>
             <p className="text-white/70 text-base font-poppins max-w-2xl mx-auto leading-relaxed">
