@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 interface TrainingData {
   nombre_entrenamiento: string;
   descripcion: string;
+  link_entrenamiento: string;
 }
 
 export const useTrainingData = (submissionId: string | null) => {
@@ -39,7 +40,7 @@ export const useTrainingData = (submissionId: string | null) => {
         // Then get the training details using any type to bypass TypeScript issues
         const { data: training, error: trainingError } = await supabase
           .from('entrenamientos_recomendados')
-          .select('nombre_entrenamiento, Descripcion')
+          .select('nombre_entrenamiento, Descripcion, link_entrenamiento')
           .eq('id', diagnostic.id_entrenamiento)
           .single();
 
@@ -54,7 +55,8 @@ export const useTrainingData = (submissionId: string | null) => {
 
         setData({
           nombre_entrenamiento: (training as any).nombre_entrenamiento,
-          descripcion: (training as any).Descripcion || ''
+          descripcion: (training as any).Descripcion || '',
+          link_entrenamiento: (training as any).link_entrenamiento || ''
         });
       } catch (err) {
         console.error('Error fetching training data:', err);

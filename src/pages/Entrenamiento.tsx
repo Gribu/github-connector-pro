@@ -54,11 +54,21 @@ const Entrenamiento = () => {
             {data.nombre_entrenamiento}
           </h2>
           
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-primary/10 mb-12">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-primary/10 mb-8">
             <p className="text-lg text-foreground leading-relaxed">
               {data.descripcion}
             </p>
           </div>
+
+          {/* Training Video */}
+          {data.link_entrenamiento && (
+            <div className="mb-12">
+              <div 
+                dangerouslySetInnerHTML={{ __html: data.link_entrenamiento }}
+                className="w-full"
+              />
+            </div>
+          )}
         </div>
 
         {/* CTA Section */}
