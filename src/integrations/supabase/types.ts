@@ -39,8 +39,8 @@ export type Database = {
         Row: {
           area_mas_baja: string
           autoliderazgo: number
+          cambio_adaptabilidad: number
           claridad_direccion: number
-          conexion_proposito: number
           dominio_emocional: number
           email: string
           energia_enfoque: number
@@ -48,6 +48,7 @@ export type Database = {
           id: string
           id_entrenamiento: string | null
           influencia_comunicacion: number
+          model_response: string | null
           nombre: string
           submission_id: string
           telefono: string | null
@@ -55,8 +56,8 @@ export type Database = {
         Insert: {
           area_mas_baja: string
           autoliderazgo: number
+          cambio_adaptabilidad: number
           claridad_direccion: number
-          conexion_proposito: number
           dominio_emocional: number
           email: string
           energia_enfoque: number
@@ -64,15 +65,16 @@ export type Database = {
           id?: string
           id_entrenamiento?: string | null
           influencia_comunicacion: number
+          model_response?: string | null
           nombre: string
-          submission_id?: string
+          submission_id: string
           telefono?: string | null
         }
         Update: {
           area_mas_baja?: string
           autoliderazgo?: number
+          cambio_adaptabilidad?: number
           claridad_direccion?: number
-          conexion_proposito?: number
           dominio_emocional?: number
           email?: string
           energia_enfoque?: number
@@ -80,6 +82,7 @@ export type Database = {
           id?: string
           id_entrenamiento?: string | null
           influencia_comunicacion?: number
+          model_response?: string | null
           nombre?: string
           submission_id?: string
           telefono?: string | null
