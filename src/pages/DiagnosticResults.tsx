@@ -68,22 +68,22 @@ const DiagnosticResults = () => {
 
   const radarData = [
     {
-      area: "Claridad mental",
+      area: "Visión & Claridad",
       value: data.claridad_direccion,
       fullValue: 10
     },
     {
-      area: "Dominio emocional", 
+      area: "Manejo de la Presión y del Estrés", 
       value: data.dominio_emocional,
       fullValue: 10
     },
     {
-      area: "Energía y enfoque",
+      area: "Energía y Enfoque",
       value: data.energia_enfoque,
       fullValue: 10
     },
     {
-      area: "Autoliderazgo",
+      area: "Liderazgo",
       value: data.autoliderazgo,
       fullValue: 10
     },
@@ -93,7 +93,7 @@ const DiagnosticResults = () => {
       fullValue: 10
     },
     {
-      area: "Propósito",
+      area: "Adaptabilidad & Cambio",
       value: data.conexion_proposito,
       fullValue: 10
     }
