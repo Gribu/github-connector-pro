@@ -86,7 +86,6 @@ const Entrenamiento = () => {
             <iframe 
               src="https://api.leadconnectorhq.com/widget/booking/PT33W3Ep8DQvuWlx6IRF" 
               style={{ width: '100%', border: 'none', overflow: 'hidden', minHeight: '600px' }}
-              scrolling="no" 
               id="PT33W3Ep8DQvuWlx6IRF_1756238018120"
               className="rounded-lg"
             />
