@@ -5,9 +5,9 @@ const ExampleRadarChart = () => {
     { area: 'Claridad Mental', value: 7, fullValue: 10 },
     { area: 'Dominio Emocional', value: 9, fullValue: 10 },
     { area: 'Energía Personal', value: 6, fullValue: 10 },
-    { area: 'Autoliderazgo', value: 8, fullValue: 10 },
+    { area: 'Liderazgo', value: 8, fullValue: 10 },
     { area: 'Influencia', value: 4, fullValue: 10 },
-    { area: 'Propósito', value: 7, fullValue: 10 }
+    { area: 'Adaptabilidad', value: 7, fullValue: 10 }
   ];
 
   return (
