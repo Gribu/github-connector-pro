@@ -2,8 +2,9 @@ import { useSearchParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from "recharts";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Brain, Target, Users, TrendingUp, Award } from "lucide-react";
 import { useDiagnosticResults } from "@/hooks/useDiagnosticResults";
+import optimusLogoBluePng from "@/assets/optimus-logo-blue.png";
 
 const DiagnosticResults = () => {
   const [searchParams] = useSearchParams();
@@ -116,72 +117,141 @@ const DiagnosticResults = () => {
   } : trainingLinks[weakestPillar.name as keyof typeof trainingLinks];
 
   const getZoneInfo = (score: number) => {
-    if (score >= 7) return { zone: "Zona Óptima", color: "text-green-600", bgColor: "bg-green-50" };
-    if (score >= 4) return { zone: "Zona de Mejora", color: "text-orange-600", bgColor: "bg-orange-50" };
-    return { zone: "Zona Crítica", color: "text-red-600", bgColor: "bg-red-50" };
+    if (score >= 7) return { 
+      zone: "Zona Óptima", 
+      color: "text-secondary", 
+      bgColor: "bg-secondary/10",
+      icon: Award
+    };
+    if (score >= 4) return { 
+      zone: "Zona de Mejora", 
+      color: "text-warning", 
+      bgColor: "bg-warning/10",
+      icon: TrendingUp
+    };
+    return { 
+      zone: "Zona Crítica", 
+      color: "text-destructive", 
+      bgColor: "bg-destructive/10",
+      icon: Target
+    };
+  };
+
+  const getPillarIcon = (pillarName: string) => {
+    switch (pillarName) {
+      case "Visión y Claridad": return Brain;
+      case "Dominio emocional en momentos críticos": return Target;
+      case "Enfoque y energía personal": return TrendingUp;
+      case "Liderazgo": return Award;
+      case "Influencia y comunicación": return Users;
+      case "Adaptabilidad y Cambio": return Brain;
+      default: return Brain;
+    }
   };
 
   return (
-    <div className="min-h-screen bg-background py-8 px-4">
-      <div className="max-w-6xl mx-auto">
-        {/* Header Section */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-4">
-            ¡Felicidades por completar el Diagnóstico de Liderazgo Mental!
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+      {/* Hero Header with Logo */}
+      <div className="bg-primary text-white py-16 px-4 mb-12">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="flex justify-center mb-8">
+            <img 
+              src={optimusLogoBluePng} 
+              alt="OPTIMUS - El Software para tu Mente" 
+              className="h-16 w-auto bg-white/10 backdrop-blur-sm rounded-lg p-4"
+            />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+            ¡Felicidades por completar tu<br />
+            <span className="text-secondary">Diagnóstico de Liderazgo Mental!</span>
           </h1>
-          <p className="text-muted-foreground mb-6">
-             Hemos evaluado tus respuestas en los 6 pilares fundamentales y calculado 
-             tu puntaje total de "Liderazgo Mental" así como tu puntuación individual por área.
-           </p>
-          
-          {/* Overall Score Card */}
-          <Card className="max-w-md mx-auto mb-8">
-            <CardContent className="pt-6">
-              <div className="text-center">
-                <p className="text-sm text-muted-foreground mb-2">PUNTAJE GENERAL DE LIDERAZGO MENTAL</p>
-                <div className="text-6xl font-bold text-primary mb-2">
-                  {Math.round(averageScore * 10)}%
-                </div>
-                <div className={`inline-block px-4 py-2 rounded-full ${getZoneInfo(averageScore).bgColor}`}>
-                  <span className={`font-semibold ${getZoneInfo(averageScore).color}`}>
-                    {getZoneInfo(averageScore).zone}
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <p className="text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
+            Hemos evaluado tus respuestas en los 6 pilares fundamentales del liderazgo mental.
+            Tu transformación comienza ahora.
+          </p>
         </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-4 pb-16">
+        {/* Overall Score Card */}
+        <Card className="max-w-2xl mx-auto mb-16 bg-gradient-to-br from-white to-secondary/5 border-2 border-secondary/20 shadow-xl">
+          <CardContent className="pt-8 pb-8">
+            <div className="text-center">
+              <div className="flex justify-center mb-4">
+                <Award className="h-12 w-12 text-warning" />
+              </div>
+              <p className="text-sm font-semibold text-primary mb-4 uppercase tracking-wider">
+                Tu Puntaje de Liderazgo Mental
+              </p>
+              <div className="text-7xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
+                {Math.round(averageScore * 10)}%
+              </div>
+              <div className={`inline-flex items-center gap-2 px-6 py-3 rounded-full ${getZoneInfo(averageScore).bgColor} border-2 border-current/20`}>
+                {(() => {
+                  const ZoneIcon = getZoneInfo(averageScore).icon;
+                  return <ZoneIcon className="h-5 w-5" />;
+                })()}
+                <span className={`text-lg font-semibold ${getZoneInfo(averageScore).color}`}>
+                  {getZoneInfo(averageScore).zone}
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Radar Chart Section */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="text-center text-2xl">
-              Resultados de tu Liderazgo Mental
+        <Card className="mb-16 bg-gradient-to-br from-white via-white to-accent/5 border-2 border-accent/20 shadow-lg">
+          <CardHeader className="text-center pb-8">
+            <div className="flex justify-center mb-4">
+              <Brain className="h-10 w-10 text-accent" />
+            </div>
+            <CardTitle className="text-3xl font-bold text-primary mb-2">
+              Tu Perfil de Liderazgo Mental
             </CardTitle>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Visualiza tu fortaleza en cada uno de los 6 pilares fundamentales del liderazgo mental
+            </p>
           </CardHeader>
           <CardContent>
-            <div className="h-96 w-full">
+            <div className="h-[500px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <RadarChart data={radarData}>
-                  <PolarGrid />
+                <RadarChart data={radarData} margin={{ top: 40, right: 80, bottom: 40, left: 80 }}>
+                  <PolarGrid 
+                    stroke="hsl(var(--border))"
+                    strokeWidth={1}
+                  />
                   <PolarAngleAxis 
                     dataKey="area" 
-                    className="text-sm"
-                    tick={{ fontSize: 12 }}
+                    className="text-sm font-medium"
+                    tick={{ 
+                      fontSize: 13, 
+                      fill: 'hsl(var(--primary))',
+                      fontWeight: 500
+                    }}
                   />
                   <PolarRadiusAxis 
                     angle={90} 
                     domain={[0, 10]} 
                     className="text-xs"
-                    tick={{ fontSize: 10 }}
+                    tick={{ 
+                      fontSize: 11, 
+                      fill: 'hsl(var(--muted-foreground))'
+                    }}
+                    tickFormatter={(value) => `${value}`}
                   />
                   <Radar
-                    name="Puntaje"
+                    name="Tu Puntaje"
                     dataKey="value"
-                    stroke="hsl(var(--primary))"
-                    fill="hsl(var(--primary))"
-                    fillOpacity={0.3}
-                    strokeWidth={2}
+                    stroke="hsl(var(--secondary))"
+                    fill="hsl(var(--secondary))"
+                    fillOpacity={0.15}
+                    strokeWidth={3}
+                    dot={{ 
+                      fill: 'hsl(var(--warning))', 
+                      strokeWidth: 3, 
+                      stroke: 'hsl(var(--primary))',
+                      r: 6 
+                    }}
                   />
                 </RadarChart>
               </ResponsiveContainer>
@@ -190,54 +260,105 @@ const DiagnosticResults = () => {
         </Card>
 
         {/* Individual Scores Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {pillars.map((pillar) => {
-            const zoneInfo = getZoneInfo(pillar.score);
-            const isWeakest = pillar.name === weakestPillar.name;
-            
-            return (
-              <Card key={pillar.key} className={`${isWeakest ? 'ring-2 ring-red-500' : ''}`}>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg leading-tight">
-                    {pillar.name}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-2xl font-bold">
-                      {Math.round(pillar.score * 10)}%
-                    </span>
-                    <div className={`px-3 py-1 rounded-full ${zoneInfo.bgColor}`}>
-                      <span className={`text-sm font-medium ${zoneInfo.color}`}>
+        <div className="mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-primary mb-4">Análisis Detallado por Pilares</h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Explora tu puntuación individual en cada uno de los pilares del liderazgo mental
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {pillars.map((pillar) => {
+              const zoneInfo = getZoneInfo(pillar.score);
+              const isWeakest = pillar.name === weakestPillar.name;
+              const PillarIcon = getPillarIcon(pillar.name);
+              
+              return (
+                <Card key={pillar.key} className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
+                  isWeakest 
+                    ? 'ring-2 ring-warning bg-gradient-to-br from-warning/5 to-warning/10 border-warning/30' 
+                    : 'bg-gradient-to-br from-white to-primary/5 border-primary/20'
+                }`}>
+                  <CardHeader className="pb-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className={`p-3 rounded-lg ${isWeakest ? 'bg-warning/20' : 'bg-primary/10'}`}>
+                        <PillarIcon className={`h-6 w-6 ${isWeakest ? 'text-warning' : 'text-primary'}`} />
+                      </div>
+                      <div className={`px-3 py-1 rounded-full text-xs font-semibold ${zoneInfo.bgColor} ${zoneInfo.color} border border-current/20`}>
                         {zoneInfo.zone}
-                      </span>
+                      </div>
                     </div>
-                  </div>
+                    <CardTitle className="text-lg leading-tight text-primary">
+                      {pillar.name}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between mb-4">
+                      <span className={`text-4xl font-bold ${isWeakest ? 'text-warning' : 'text-primary'}`}>
+                        {Math.round(pillar.score * 10)}%
+                      </span>
+                      <div className="flex items-center gap-1">
+                        {Array.from({ length: 5 }, (_, i) => (
+                          <div
+                            key={i}
+                            className={`w-2 h-6 rounded-full ${
+                              i < (pillar.score * 5) / 10 
+                                ? (isWeakest ? 'bg-warning' : 'bg-primary') 
+                                : 'bg-muted'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    {isWeakest && (
+                      <div className="mt-4 p-4 bg-gradient-to-r from-warning/10 to-warning/5 rounded-lg border-l-4 border-warning">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Target className="h-4 w-4 text-warning" />
+                          <p className="text-sm text-warning font-semibold">
+                            Área Prioritaria
+                          </p>
+                        </div>
+                        <p className="text-xs text-warning/80">
+                          Este es tu mayor punto de mejora. Te recomendamos enfocar tu desarrollo en esta área.
+                        </p>
+                      </div>
+                    )}
+                  </CardContent>
+                  
                   {isWeakest && (
-                    <div className="mt-3 p-3 bg-red-50 rounded-lg border-l-4 border-red-500">
-                      <p className="text-sm text-red-700 font-medium">
-                        Área con mayor oportunidad de mejora
-                      </p>
+                    <div className="absolute top-4 right-4">
+                      <div className="w-3 h-3 bg-warning rounded-full animate-pulse" />
                     </div>
                   )}
-                </CardContent>
-              </Card>
-            );
-          })}
+                </Card>
+              );
+            })}
+          </div>
         </div>
 
         {/* AI Analysis Section */}
         {data.model_response && (
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle className="text-center text-2xl">
-                Análisis Personalizado
+          <Card className="mb-16 bg-gradient-to-br from-accent/5 via-white to-accent/10 border-2 border-accent/20 shadow-lg">
+            <CardHeader className="text-center pb-6">
+              <div className="flex justify-center mb-4">
+                <Brain className="h-10 w-10 text-accent" />
+              </div>
+              <CardTitle className="text-3xl font-bold text-primary mb-2">
+                Tu Análisis Personalizado
               </CardTitle>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Insights generados específicamente para tu perfil de liderazgo mental
+              </p>
             </CardHeader>
             <CardContent>
-              <div className="prose prose-lg max-w-none">
-                <div className="whitespace-pre-wrap text-muted-foreground leading-relaxed">
-                  {data.model_response}
+              <div className="max-w-4xl mx-auto">
+                <div className="bg-white/50 backdrop-blur-sm p-8 rounded-xl border border-accent/20">
+                  <div className="prose prose-lg max-w-none">
+                    <div className="whitespace-pre-wrap text-foreground leading-relaxed font-medium text-lg">
+                      {data.model_response}
+                    </div>
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -245,30 +366,55 @@ const DiagnosticResults = () => {
         )}
 
         {/* Recommendation Section */}
-        <Card className="bg-gradient-to-r from-primary/10 to-primary/5">
-          <CardContent className="pt-6">
+        <Card className="bg-gradient-to-br from-warning/10 via-warning/5 to-primary/10 border-2 border-warning/30 shadow-xl">
+          <CardContent className="pt-8 pb-8">
             <div className="text-center">
-              <h2 className="text-2xl font-bold mb-4">Tu Entrenamiento Recomendado</h2>
-              <p className="text-lg mb-6">
-                Tu área con mayor oportunidad de mejora es <strong>{weakestPillar.name}</strong>.
-                Este pilar es fundamental para lograr la transformación que deseas como líder.
-                Te recomendamos iniciar con este entrenamiento específico:
-              </p>
+              <div className="flex justify-center mb-6">
+                <div className="relative">
+                  <Target className="h-16 w-16 text-warning" />
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-warning rounded-full flex items-center justify-center">
+                    <span className="text-xs font-bold text-white">!</span>
+                  </div>
+                </div>
+              </div>
               
-              <div className="max-w-md mx-auto">
-                <Card className="mb-6">
-                  <CardContent className="pt-6">
-                    <h3 className="text-xl font-semibold mb-4">
+              <h2 className="text-4xl font-bold text-primary mb-6">
+                Tu Próximo Paso hacia la <span className="text-warning">Excelencia</span>
+              </h2>
+              
+              <div className="max-w-3xl mx-auto mb-8">
+                <div className="bg-white/60 backdrop-blur-sm p-6 rounded-xl border border-warning/20 mb-6">
+                  <p className="text-lg text-foreground mb-4 leading-relaxed">
+                    Tu área con mayor oportunidad de mejora es{" "}
+                    <span className="font-bold text-warning">{weakestPillar.name}</span>.
+                  </p>
+                  <p className="text-base text-muted-foreground">
+                    Este pilar es fundamental para lograr la transformación que deseas como líder.
+                    Hemos seleccionado el entrenamiento perfecto para acelerar tu desarrollo.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="max-w-lg mx-auto">
+                <Card className="bg-gradient-to-br from-primary to-accent border-2 border-primary/30 shadow-2xl overflow-hidden">
+                  <CardContent className="pt-8 pb-8 text-white">
+                    <div className="flex justify-center mb-4">
+                      <Award className="h-12 w-12 text-warning" />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-6 text-white">
                       {recommendedTraining.title}
                     </h3>
                     <Button 
                       size="lg" 
-                      className="w-full"
+                      className="w-full bg-warning hover:bg-warning/90 text-primary font-bold text-lg py-4 h-auto transition-all duration-300 transform hover:scale-105 shadow-lg"
                       onClick={() => window.open(recommendedTraining.url, '_blank')}
                     >
-                      Ver Entrenamiento
-                      <ExternalLink className="ml-2 h-4 w-4" />
+                      🚀 Comenzar Mi Transformación
+                      <ExternalLink className="ml-2 h-5 w-5" />
                     </Button>
+                    <p className="text-white/80 text-sm mt-4">
+                      ✨ Diseñado específicamente para tu perfil
+                    </p>
                   </CardContent>
                 </Card>
               </div>
