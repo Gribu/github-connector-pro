@@ -4,7 +4,7 @@ const ExampleRadarChart = () => {
   const data = [
     { area: 'Visión & Claridad', value: 7, fullValue: 10 },
     { area: 'Dominio Emocional', value: 9, fullValue: 10 },
-    { area: 'Energía & Enfoque', value: 6, fullValue: 10 },
+    { area: 'Energía', value: 6, fullValue: 10 },
     { area: 'Liderazgo', value: 8, fullValue: 10 },
     { area: 'Influencia', value: 4, fullValue: 10 },
     { area: 'Adaptabilidad', value: 7, fullValue: 10 }
