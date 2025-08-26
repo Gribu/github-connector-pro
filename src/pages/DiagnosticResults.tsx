@@ -156,9 +156,9 @@ const DiagnosticResults = () => {
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex justify-center mb-8">
             <img 
-              src={optimusLogoBluePng} 
+              src="/lovable-uploads/b4013c2e-b832-4574-be32-050289f8d891.png" 
               alt="OPTIMUS - El Software para tu Mente" 
-              className="h-16 w-auto bg-white/10 backdrop-blur-sm rounded-lg p-4"
+              className="h-16 w-auto"
             />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
