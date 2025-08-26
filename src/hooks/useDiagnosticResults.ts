@@ -7,34 +7,33 @@ interface DiagnosticData {
   energia_enfoque: number;
   autoliderazgo: number;
   influencia_comunicacion: number;
-  conexion_proposito: number;
+  cambio_adaptabilidad: number;
   area_mas_baja: string;
+  model_response?: string;
   entrenamientos_recomendados?: {
     nombre_entrenamiento: string;
     link_entrenamiento: string;
   };
 }
 
-export const useDiagnosticResults = (email: string | null, id: string | null, submissionId: string | null) => {
+export const useDiagnosticResults = (submissionId: string | null) => {
   const [data, setData] = useState<DiagnosticData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchResults = async () => {
-      if (!email) {
-        setError('Email requerido');
+      if (!submissionId) {
+        setError('Submission ID requerido');
         setLoading(false);
         return;
       }
 
       try {
-        console.log('Fetching diagnostic results for email:', email, 'submissionId:', submissionId);
+        console.log('Fetching diagnostic results for submissionId:', submissionId);
         
         // Fetch data from secure edge function
-        const url = submissionId 
-          ? `https://gqqgaumrostovtwjghye.supabase.co/functions/v1/get-diagnostic-results?email=${encodeURIComponent(email)}&submission_id=${encodeURIComponent(submissionId)}`
-          : `https://gqqgaumrostovtwjghye.supabase.co/functions/v1/get-diagnostic-results?email=${encodeURIComponent(email)}`;
+        const url = `https://gqqgaumrostovtwjghye.supabase.co/functions/v1/get-diagnostic-results?submission_id=${encodeURIComponent(submissionId)}`;
         
         console.log('Calling URL:', url);
         
@@ -73,7 +72,7 @@ export const useDiagnosticResults = (email: string | null, id: string | null, su
     };
 
     fetchResults();
-  }, [email, submissionId]);
+  }, [submissionId]);
 
   return { data, loading, error };
 };

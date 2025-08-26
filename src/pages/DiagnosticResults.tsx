@@ -7,11 +7,9 @@ import { useDiagnosticResults } from "@/hooks/useDiagnosticResults";
 
 const DiagnosticResults = () => {
   const [searchParams] = useSearchParams();
-  const email = searchParams.get('email');
-  const id = searchParams.get('id');
   const submissionId = searchParams.get('submission_id');
   
-  const { data, loading, error } = useDiagnosticResults(email, id, submissionId);
+  const { data, loading, error } = useDiagnosticResults(submissionId);
 
   const trainingLinks = {
     "Claridad mental y dirección": {
@@ -68,7 +66,7 @@ const DiagnosticResults = () => {
 
   const radarData = [
     {
-      area: "Visión & Claridad",
+      area: "Visión y Claridad",
       value: data.claridad_direccion,
       fullValue: 10
     },
@@ -93,8 +91,8 @@ const DiagnosticResults = () => {
       fullValue: 10
     },
     {
-      area: "Adaptabilidad & Cambio",
-      value: data.conexion_proposito,
+      area: "Adaptabilidad y Cambio",
+      value: data.cambio_adaptabilidad,
       fullValue: 10
     }
   ];
@@ -105,7 +103,7 @@ const DiagnosticResults = () => {
     { name: "Enfoque y energía personal", score: data.energia_enfoque, key: "energia_enfoque" },
     { name: "Autoliderazgo y hábitos mentales", score: data.autoliderazgo, key: "autoliderazgo" },
     { name: "Influencia y comunicación", score: data.influencia_comunicacion, key: "influencia_comunicacion" },
-    { name: "Conexión con propósito", score: data.conexion_proposito, key: "conexion_proposito" }
+    { name: "Conexión con propósito", score: data.cambio_adaptabilidad, key: "cambio_adaptabilidad" }
   ];
 
   const averageScore = pillars.reduce((sum, pillar) => sum + pillar.score, 0) / pillars.length;
@@ -131,10 +129,7 @@ const DiagnosticResults = () => {
           <h1 className="text-3xl font-bold text-foreground mb-4">
             ¡Felicidades por completar el Diagnóstico de Liderazgo Mental!
           </h1>
-          <p className="text-muted-foreground mb-2">
-            Tu reporte completo ha sido enviado a {data.email}
-          </p>
-           <p className="text-muted-foreground mb-6">
+          <p className="text-muted-foreground mb-6">
              Hemos evaluado tus respuestas en los 6 pilares fundamentales y calculado 
              tu puntaje total de "Liderazgo Mental" así como tu puntuación individual por área.
            </p>
@@ -230,6 +225,24 @@ const DiagnosticResults = () => {
             );
           })}
         </div>
+
+        {/* AI Analysis Section */}
+        {data.model_response && (
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="text-center text-2xl">
+                Análisis Personalizado
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="prose prose-lg max-w-none">
+                <div className="whitespace-pre-wrap text-muted-foreground leading-relaxed">
+                  {data.model_response}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Recommendation Section */}
         <Card className="bg-gradient-to-r from-primary/10 to-primary/5">

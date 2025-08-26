@@ -18,39 +18,23 @@ serve(async (req) => {
     )
 
     const url = new URL(req.url)
-    const email = url.searchParams.get('email')
     const submissionId = url.searchParams.get('submission_id')
 
-    console.log('Getting results for:', { email, submissionId });
+    console.log('Getting results for submissionId:', submissionId);
 
     // Validate input parameters
-    if (!email) {
+    if (!submissionId) {
       return new Response(
-        JSON.stringify({ error: 'Email is required' }),
+        JSON.stringify({ error: 'Submission ID is required' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid email format' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
-    }
-
-    // Get diagnostic results - simple query first
-    let query = supabase
+    // Get diagnostic results by submission_id
+    const query = supabase
       .from('respuestas_diagnostico')
       .select('*')
-      .eq('email', email);
-
-    if (submissionId) {
-      query = query.eq('submission_id', submissionId);
-    } else {
-      query = query.order('fecha_respuesta', { ascending: false }).limit(1);
-    }
+      .eq('submission_id', submissionId);
 
     const { data: diagnosticResult, error: diagnosticError } = await query.maybeSingle()
 
@@ -72,7 +56,7 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({ 
           success: false,
-          error: 'No diagnostic results found for this email'
+          error: 'No diagnostic results found for this submission ID'
         }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
@@ -101,9 +85,10 @@ serve(async (req) => {
           energia_enfoque: diagnosticResult.energia_enfoque,
           autoliderazgo: diagnosticResult.autoliderazgo,
           influencia_comunicacion: diagnosticResult.influencia_comunicacion,
-          conexion_proposito: diagnosticResult.conexion_proposito,
+          cambio_adaptabilidad: diagnosticResult.cambio_adaptabilidad,
           area_mas_baja: diagnosticResult.area_mas_baja,
-          entrenamientos_recomendados: trainingData ? [trainingData] : []
+          model_response: diagnosticResult.model_response,
+          entrenamientos_recomendados: trainingData ? trainingData : null
         }
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
