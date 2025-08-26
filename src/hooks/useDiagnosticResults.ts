@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { supabase } from "@/integrations/supabase/client";
 
 interface DiagnosticData {
   email: string;
@@ -30,39 +31,24 @@ export const useDiagnosticResults = (submissionId: string | null) => {
       }
 
       try {
-        console.log('Fetching diagnostic results for submissionId:', submissionId);
-        
-        // Fetch data from secure edge function
-        const url = `https://gqqgaumrostovtwjghye.supabase.co/functions/v1/get-diagnostic-results?submission_id=${encodeURIComponent(submissionId)}`;
-        
-        console.log('Calling URL:', url);
-        
-        const response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          }
+        console.log('Invoking edge function get-diagnostic-results with submissionId:', submissionId);
+        const { data: result, error: fnError } = await supabase.functions.invoke('get-diagnostic-results', {
+          body: { submission_id: submissionId }
         });
 
-        console.log('Response status:', response.status);
-        console.log('Response ok:', response.ok);
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('Response error:', errorText);
+        if (fnError) {
+          console.error('Edge function error:', fnError);
           throw new Error('Error al obtener los resultados');
         }
 
-        const result = await response.json();
-        console.log('Response result:', result);
-        
-        if (!result.success) {
-          console.error('Result error:', result.error);
-          throw new Error(result.error || 'Error al cargar los datos');
+        console.log('Edge function result:', result);
+
+        if (!result?.success) {
+          console.error('Result error:', (result as any)?.error);
+          throw new Error((result as any)?.error || 'Error al cargar los datos');
         }
 
-        console.log('Setting data:', result.data);
-        setData(result.data);
+        setData((result as any).data);
       } catch (err) {
         console.error('Error fetching diagnostic results:', err);
         setError('Error al cargar los resultados del diagnóstico');

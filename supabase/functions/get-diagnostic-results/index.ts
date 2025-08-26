@@ -18,7 +18,13 @@ serve(async (req) => {
     )
 
     const url = new URL(req.url)
-    const submissionId = url.searchParams.get('submission_id')
+    let submissionId = url.searchParams.get('submission_id')
+    if (!submissionId && req.method === 'POST') {
+      try {
+        const body = await req.json();
+        submissionId = body?.submission_id ?? null;
+      } catch (_) {}
+    }
 
     console.log('Getting results for submissionId:', submissionId);
 

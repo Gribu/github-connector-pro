@@ -12,7 +12,7 @@ const DiagnosticResults = () => {
   const { data, loading, error } = useDiagnosticResults(submissionId);
 
   const trainingLinks = {
-    "Claridad mental y dirección": {
+    "Visión y Claridad": {
       title: "Cómo mantener el enfoque correcto",
       url: "https://entrenamiento.com/enfoque"
     },
@@ -24,7 +24,7 @@ const DiagnosticResults = () => {
       title: "Sálvate de la procrastinación",
       url: "https://entrenamiento.com/procrastinacion"
     },
-    "Autoliderazgo y hábitos mentales": {
+    "Liderazgo": {
       title: "Por qué terminan las rachas ganadoras",
       url: "https://entrenamiento.com/rachas"
     },
@@ -32,7 +32,7 @@ const DiagnosticResults = () => {
       title: "La crítica en equipos / Arte de convencer",
       url: "https://entrenamiento.com/comunicacion"
     },
-    "Conexión con propósito": {
+    "Adaptabilidad y Cambio": {
       title: "No puedes cambiar lo que no eres consciente",
       url: "https://entrenamiento.com/proposito"
     },
@@ -98,12 +98,12 @@ const DiagnosticResults = () => {
   ];
 
   const pillars = [
-    { name: "Claridad mental y dirección", score: data.claridad_direccion, key: "claridad_direccion" },
+    { name: "Visión y Claridad", score: data.claridad_direccion, key: "claridad_direccion" },
     { name: "Dominio emocional en momentos críticos", score: data.dominio_emocional, key: "dominio_emocional" },
     { name: "Enfoque y energía personal", score: data.energia_enfoque, key: "energia_enfoque" },
-    { name: "Autoliderazgo y hábitos mentales", score: data.autoliderazgo, key: "autoliderazgo" },
+    { name: "Liderazgo", score: data.autoliderazgo, key: "autoliderazgo" },
     { name: "Influencia y comunicación", score: data.influencia_comunicacion, key: "influencia_comunicacion" },
-    { name: "Conexión con propósito", score: data.cambio_adaptabilidad, key: "cambio_adaptabilidad" }
+    { name: "Adaptabilidad y Cambio", score: data.cambio_adaptabilidad, key: "cambio_adaptabilidad" }
   ];
 
   const averageScore = pillars.reduce((sum, pillar) => sum + pillar.score, 0) / pillars.length;
