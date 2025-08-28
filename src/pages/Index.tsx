@@ -16,6 +16,7 @@ import ExampleRadarChart from "@/components/ExampleRadarChart";
 
 const Index = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  
   useEffect(() => {
     // Cargar script de Tally
     const script = document.createElement('script');
@@ -23,6 +24,53 @@ const Index = () => {
       var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}
     `;
     document.body.appendChild(script);
+  }, []);
+
+  useEffect(() => {
+    // Webhook tracking para visitas a la página
+    const sendWebhook = async () => {
+      try {
+        // Extraer ref_id de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const refId = urlParams.get('ref_id');
+        
+        // Obtener país del usuario
+        const geoResponse = await fetch('https://ipapi.co/json/');
+        const geoData = await geoResponse.json();
+        const country = geoData.country_name || 'Unknown';
+        
+        // Preparar payload
+        const payload = {
+          country: country,
+          ref_id: refId,
+          timestamp: new Date().toISOString(),
+          url: window.location.href
+        };
+        
+        console.log('Enviando webhook con datos:', payload);
+        
+        // Enviar al webhook de n8n
+        const webhookResponse = await fetch('https://optimussync.app.n8n.cloud/webhook/1a6b7306-9d4c-4968-bbbc-3c5a5d86cbe4', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+        
+        if (webhookResponse.ok) {
+          console.log('Webhook enviado exitosamente');
+        } else {
+          console.error('Error al enviar webhook:', webhookResponse.status);
+        }
+        
+      } catch (error) {
+        console.error('Error en webhook tracking:', error);
+      }
+    };
+    
+    // Ejecutar el tracking al cargar la página
+    sendWebhook();
   }, []);
 
   const openDiagnosticForm = () => {
