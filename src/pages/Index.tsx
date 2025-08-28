@@ -14,9 +14,62 @@ import {
 } from "lucide-react";
 import ExampleRadarChart from "@/components/ExampleRadarChart";
 
+// Function to get user's country using IP geolocation
+const getUserCountry = async (): Promise<string> => {
+  try {
+    const response = await fetch('https://ipapi.co/json/');
+    const data = await response.json();
+    return data.country_name || 'Unknown';
+  } catch (error) {
+    console.error('Error getting user country:', error);
+    return 'Unknown';
+  }
+};
+
+// Function to get ref_id from URL parameters
+const getRefIdFromUrl = (): string | null => {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get('ref_id');
+};
+
+// Function to send webhook
+const sendWebhook = async (country: string, refId: string | null) => {
+  try {
+    const webhookData = {
+      country,
+      ref_id: refId,
+      timestamp: new Date().toISOString(),
+      url: window.location.href
+    };
+
+    await fetch('https://optimussync.app.n8n.cloud/webhook/1a6b7306-9d4c-4968-bbbc-3c5a5d86cbe4', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      mode: 'no-cors',
+      body: JSON.stringify(webhookData)
+    });
+
+    console.log('Webhook sent successfully:', webhookData);
+  } catch (error) {
+    console.error('Error sending webhook:', error);
+  }
+};
+
 const Index = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  
   useEffect(() => {
+    // Send webhook on page load
+    const sendVisitWebhook = async () => {
+      const country = await getUserCountry();
+      const refId = getRefIdFromUrl();
+      await sendWebhook(country, refId);
+    };
+
+    sendVisitWebhook();
+
     // Cargar script de Tally
     const script = document.createElement('script');
     script.innerHTML = `
