@@ -13,109 +13,10 @@ import {
   ChevronDown
 } from "lucide-react";
 import ExampleRadarChart from "@/components/ExampleRadarChart";
-import { supabase } from "@/integrations/supabase/client";
-
-// Function to get user's country using IP geolocation
-const getUserCountry = async (): Promise<string> => {
-  try {
-    const response = await fetch('https://ipapi.co/json/');
-    if (!response.ok) throw new Error('ipapi.co failed');
-    const data = await response.json();
-    if (data?.country_name) return data.country_name as string;
-    throw new Error('ipapi.co missing country_name');
-  } catch (error) {
-    console.warn('Primary geolocation failed, trying fallback:', error);
-    try {
-      const res2 = await fetch('https://ipwho.is/');
-      if (res2.ok) {
-        const data2 = await res2.json();
-        return data2?.country || 'Unknown';
-      }
-    } catch (e) {
-      console.error('Fallback geolocation failed:', e);
-    }
-    return 'Unknown';
-  }
-};
-
-// Function to get ref_id from URL parameters
-const getRefIdFromUrl = (): string | null => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const refId = urlParams.get('ref_id');
-  console.log('Current URL:', window.location.href);
-  console.log('URL params:', window.location.search);
-  console.log('Extracted ref_id:', refId);
-  return refId;
-};
-
-// Function to send webhook via Supabase Edge Function (avoids CORS)
-const sendWebhook = async (country: string, refId: string | null) => {
-  const webhookData = {
-    country,
-    ref_id: refId,
-    timestamp: new Date().toISOString(),
-    url: window.location.href,
-  };
-
-  const maxAttempts = 3;
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    try {
-      console.log(`Sending webhook (attempt ${attempt}):`, webhookData);
-      const { data, error } = await supabase.functions.invoke('forward-webhook', {
-        body: webhookData,
-      });
-
-      if (error) throw error;
-      if (data?.success !== true) {
-        throw new Error(`Edge function responded with failure: ${JSON.stringify(data)}`);
-      }
-
-      console.log('Webhook sent successfully via edge function:', data);
-      return;
-    } catch (err) {
-      console.error(`Webhook attempt ${attempt} failed:`, err);
-      if (attempt < maxAttempts) {
-        await new Promise((res) => setTimeout(res, attempt * 1000));
-        continue;
-      }
-    }
-  }
-
-  // Fallback: try sending directly to n8n to surface any CORS/server errors in console
-  try {
-    console.log('[Webhook] Trying direct POST to n8n webhook as fallback');
-    const res = await fetch('https://optimussync.app.n8n.cloud/webhook/1a6b7306-9d4c-4968-bbbc-3c5a5d86cbe4', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(webhookData),
-    });
-    const text = await res.text();
-    console.log('[Webhook] Direct POST result:', res.status, res.statusText, text);
-  } catch (e) {
-    console.error('[Webhook] Direct POST failed:', e);
-  }
-};
 
 const Index = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  
   useEffect(() => {
-    console.log('[Webhook] useEffect mounted');
-    // Send webhook on page load
-    const sendVisitWebhook = async () => {
-      try {
-        console.log('[Webhook] Preparing data...');
-        const country = await getUserCountry();
-        const refId = getRefIdFromUrl();
-        console.log('[Webhook] Data ready:', { country, refId });
-        await sendWebhook(country, refId);
-      } catch (e) {
-        console.error('[Webhook] Unexpected error in sendVisitWebhook:', e);
-      }
-    };
-
-    sendVisitWebhook();
-
     // Cargar script de Tally
     const script = document.createElement('script');
     script.innerHTML = `
