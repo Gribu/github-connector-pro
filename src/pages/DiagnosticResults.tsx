@@ -87,7 +87,7 @@ const DiagnosticResults = () => {
       fullValue: 10
     },
     {
-      area: "Influencia",
+      area: "Influencia y Comunicación",
       value: data.influencia_comunicacion,
       fullValue: 10
     },
@@ -100,8 +100,8 @@ const DiagnosticResults = () => {
 
   const pillars = [
     { name: "Visión y Claridad", score: data.claridad_direccion, key: "claridad_direccion" },
-    { name: "Dominio emocional en momentos críticos", score: data.dominio_emocional, key: "dominio_emocional" },
-    { name: "Enfoque y energía personal", score: data.energia_enfoque, key: "energia_enfoque" },
+    { name: "Manejo de la Presión y del Estrés", score: data.dominio_emocional, key: "dominio_emocional" },
+    { name: "Enfoque y Energía", score: data.energia_enfoque, key: "energia_enfoque" },
     { name: "Liderazgo", score: data.autoliderazgo, key: "autoliderazgo" },
     { name: "Influencia y comunicación", score: data.influencia_comunicacion, key: "influencia_comunicacion" },
     { name: "Adaptabilidad y Cambio", score: data.cambio_adaptabilidad, key: "cambio_adaptabilidad" }
@@ -140,7 +140,7 @@ const DiagnosticResults = () => {
   const getPillarIcon = (pillarName: string) => {
     switch (pillarName) {
       case "Visión y Claridad": return Brain;
-      case "Dominio emocional en momentos críticos": return Target;
+      case "Manejo de la Presión y del Estrés": return Target;
       case "Enfoque y energía personal": return TrendingUp;
       case "Liderazgo": return Award;
       case "Influencia y comunicación": return Users;
