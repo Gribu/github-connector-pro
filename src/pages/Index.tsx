@@ -29,7 +29,11 @@ const getUserCountry = async (): Promise<string> => {
 // Function to get ref_id from URL parameters
 const getRefIdFromUrl = (): string | null => {
   const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get('ref_id');
+  const refId = urlParams.get('ref_id');
+  console.log('Current URL:', window.location.href);
+  console.log('URL params:', window.location.search);
+  console.log('Extracted ref_id:', refId);
+  return refId;
 };
 
 // Function to send webhook
