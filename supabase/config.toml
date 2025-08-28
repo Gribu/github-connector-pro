@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.get-diagnostic-results]
 verify_jwt = false
+
+[functions.forward-webhook]
+verify_jwt = false

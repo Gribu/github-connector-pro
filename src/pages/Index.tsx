@@ -13,6 +13,7 @@ import {
   ChevronDown
 } from "lucide-react";
 import ExampleRadarChart from "@/components/ExampleRadarChart";
+import { supabase } from "@/integrations/supabase/client";
 
 // Function to get user's country using IP geolocation
 const getUserCountry = async (): Promise<string> => {
@@ -36,28 +37,38 @@ const getRefIdFromUrl = (): string | null => {
   return refId;
 };
 
-// Function to send webhook
+// Function to send webhook via Supabase Edge Function (avoids CORS)
 const sendWebhook = async (country: string, refId: string | null) => {
-  try {
-    const webhookData = {
-      country,
-      ref_id: refId,
-      timestamp: new Date().toISOString(),
-      url: window.location.href
-    };
+  const webhookData = {
+    country,
+    ref_id: refId,
+    timestamp: new Date().toISOString(),
+    url: window.location.href,
+  };
 
-    await fetch('https://optimussync.app.n8n.cloud/webhook/1a6b7306-9d4c-4968-bbbc-3c5a5d86cbe4', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      mode: 'no-cors',
-      body: JSON.stringify(webhookData)
-    });
+  const maxAttempts = 3;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      console.log(`Sending webhook (attempt ${attempt}):`, webhookData);
+      const { data, error } = await supabase.functions.invoke('forward-webhook', {
+        body: webhookData,
+      });
 
-    console.log('Webhook sent successfully:', webhookData);
-  } catch (error) {
-    console.error('Error sending webhook:', error);
+      if (error) throw error;
+      if (data?.success !== true) {
+        throw new Error(`Edge function responded with failure: ${JSON.stringify(data)}`);
+      }
+
+      console.log('Webhook sent successfully via edge function:', data);
+      return;
+    } catch (err) {
+      console.error(`Webhook attempt ${attempt} failed:`, err);
+      if (attempt < maxAttempts) {
+        await new Promise((res) => setTimeout(res, attempt * 1000));
+        continue;
+      }
+      break;
+    }
   }
 };
 
