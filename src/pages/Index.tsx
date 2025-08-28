@@ -27,30 +27,21 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    console.log('🔥 INICIANDO WEBHOOK TRACKING');
-    console.log('URL actual:', window.location.href);
-    console.log('Search params:', window.location.search);
-    
     // Webhook tracking para visitas a la página
     const sendWebhook = async () => {
       try {
-        console.log('🚀 Ejecutando sendWebhook...');
-        
         // Extraer ref_id de la URL
         const urlParams = new URLSearchParams(window.location.search);
         const refId = urlParams.get('ref_id');
-        console.log('🎯 ref_id extraído:', refId);
+        
+        console.log('URL completa:', window.location.href);
+        console.log('Query string:', window.location.search);
+        console.log('ref_id extraído:', refId);
         
         // Obtener país del usuario
-        console.log('🌍 Obteniendo ubicación...');
         const geoResponse = await fetch('https://ipapi.co/json/');
-        console.log('📍 Respuesta geo status:', geoResponse.status);
-        
         const geoData = await geoResponse.json();
-        console.log('📍 Datos geo:', geoData);
-        
         const country = geoData.country_name || 'Unknown';
-        console.log('🏳️ País detectado:', country);
         
         // Preparar payload
         const payload = {
@@ -60,8 +51,7 @@ const Index = () => {
           url: window.location.href
         };
         
-        console.log('📦 Payload preparado:', payload);
-        console.log('🎯 Enviando a webhook n8n...');
+        console.log('Enviando webhook con datos:', payload);
         
         // Enviar al webhook de n8n
         const webhookResponse = await fetch('https://optimussync.app.n8n.cloud/webhook/1a6b7306-9d4c-4968-bbbc-3c5a5d86cbe4', {
@@ -72,25 +62,18 @@ const Index = () => {
           body: JSON.stringify(payload),
         });
         
-        console.log('📤 Respuesta webhook status:', webhookResponse.status);
-        console.log('📤 Respuesta webhook headers:', Object.fromEntries(webhookResponse.headers));
-        
         if (webhookResponse.ok) {
-          const responseText = await webhookResponse.text();
-          console.log('✅ Webhook enviado exitosamente. Respuesta:', responseText);
+          console.log('Webhook enviado exitosamente');
         } else {
-          const errorText = await webhookResponse.text();
-          console.error('❌ Error al enviar webhook:', webhookResponse.status, errorText);
+          console.error('Error al enviar webhook:', webhookResponse.status);
         }
         
       } catch (error) {
-        console.error('💥 Error en webhook tracking:', error);
-        console.error('💥 Stack trace:', error.stack);
+        console.error('Error en webhook tracking:', error);
       }
     };
     
     // Ejecutar el tracking al cargar la página
-    console.log('⏰ Programando ejecución de sendWebhook...');
     sendWebhook();
   }, []);
 
