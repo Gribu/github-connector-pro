@@ -407,10 +407,9 @@ const DiagnosticResults = () => {
                     <Button 
                       size="lg" 
                       className="w-full bg-warning hover:bg-warning/90 text-primary font-bold text-lg py-4 h-auto transition-all duration-300 transform hover:scale-105 shadow-lg"
-                      onClick={() => window.open(recommendedTraining.url, '_blank')}
+                      onClick={() => window.location.href = `/entrenamiento?submission_id=${submissionId}`}
                     >
                       🚀 Comenzar Mi Transformación
-                      <ExternalLink className="ml-2 h-5 w-5" />
                     </Button>
                     <p className="text-white/80 text-sm mt-4">
                       ✨ Diseñado específicamente para tu perfil
