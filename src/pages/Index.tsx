@@ -19,10 +19,21 @@ import { supabase } from "@/integrations/supabase/client";
 const getUserCountry = async (): Promise<string> => {
   try {
     const response = await fetch('https://ipapi.co/json/');
+    if (!response.ok) throw new Error('ipapi.co failed');
     const data = await response.json();
-    return data.country_name || 'Unknown';
+    if (data?.country_name) return data.country_name as string;
+    throw new Error('ipapi.co missing country_name');
   } catch (error) {
-    console.error('Error getting user country:', error);
+    console.warn('Primary geolocation failed, trying fallback:', error);
+    try {
+      const res2 = await fetch('https://ipwho.is/');
+      if (res2.ok) {
+        const data2 = await res2.json();
+        return data2?.country || 'Unknown';
+      }
+    } catch (e) {
+      console.error('Fallback geolocation failed:', e);
+    }
     return 'Unknown';
   }
 };
@@ -67,8 +78,21 @@ const sendWebhook = async (country: string, refId: string | null) => {
         await new Promise((res) => setTimeout(res, attempt * 1000));
         continue;
       }
-      break;
     }
+  }
+
+  // Fallback: try sending directly to n8n to surface any CORS/server errors in console
+  try {
+    console.log('[Webhook] Trying direct POST to n8n webhook as fallback');
+    const res = await fetch('https://optimussync.app.n8n.cloud/webhook/1a6b7306-9d4c-4968-bbbc-3c5a5d86cbe4', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(webhookData),
+    });
+    const text = await res.text();
+    console.log('[Webhook] Direct POST result:', res.status, res.statusText, text);
+  } catch (e) {
+    console.error('[Webhook] Direct POST failed:', e);
   }
 };
 
@@ -76,11 +100,18 @@ const Index = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   
   useEffect(() => {
+    console.log('[Webhook] useEffect mounted');
     // Send webhook on page load
     const sendVisitWebhook = async () => {
-      const country = await getUserCountry();
-      const refId = getRefIdFromUrl();
-      await sendWebhook(country, refId);
+      try {
+        console.log('[Webhook] Preparing data...');
+        const country = await getUserCountry();
+        const refId = getRefIdFromUrl();
+        console.log('[Webhook] Data ready:', { country, refId });
+        await sendWebhook(country, refId);
+      } catch (e) {
+        console.error('[Webhook] Unexpected error in sendVisitWebhook:', e);
+      }
     };
 
     sendVisitWebhook();
