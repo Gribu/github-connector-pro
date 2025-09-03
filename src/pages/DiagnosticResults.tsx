@@ -374,9 +374,10 @@ const DiagnosticResults = () => {
               <div className="max-w-4xl mx-auto">
                 <div className="bg-white/50 backdrop-blur-sm p-8 rounded-xl border border-accent/20">
                   <div className="prose prose-lg max-w-none">
-                    <div className="whitespace-pre-wrap text-foreground leading-relaxed font-medium text-lg">
-                      {displayData.model_response}
-                    </div>
+                    <div 
+                      className="text-foreground leading-relaxed font-medium text-lg"
+                      dangerouslySetInnerHTML={{ __html: displayData.model_response }}
+                    />
                   </div>
                 </div>
               </div>
