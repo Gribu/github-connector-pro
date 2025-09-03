@@ -72,9 +72,10 @@ const Entrenamiento = () => {
           </h2>
           
           <div className="bg-white/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-primary/10 mb-8">
-            <p className="text-lg text-foreground leading-relaxed">
-              {displayData.descripcion}
-            </p>
+            <div 
+              className="text-lg text-foreground leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: displayData.descripcion }}
+            />
           </div>
 
           {/* Training Video */}
