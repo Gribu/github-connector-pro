@@ -425,10 +425,10 @@ const DiagnosticResults = () => {
                     </h3>
                     <Button 
                       size="lg" 
-                      className="w-full bg-warning hover:bg-warning/90 text-primary font-bold text-lg py-4 h-auto transition-all duration-300 transform hover:scale-105 shadow-lg"
+                      className="w-full bg-warning hover:bg-warning/90 text-primary font-bold text-base sm:text-lg py-4 px-4 h-auto transition-all duration-300 transform hover:scale-105 shadow-lg whitespace-nowrap overflow-hidden text-ellipsis"
                       onClick={() => window.location.href = `/entrenamiento?submission_id=${submissionId}`}
                     >
-                      🚀 Comenzar Mi Transformación
+                      IR A MI ENTRENAMIENTO 🚀
                     </Button>
                     <p className="text-white/80 text-sm mt-4">
                       ✨ Diseñado específicamente para tu perfil
