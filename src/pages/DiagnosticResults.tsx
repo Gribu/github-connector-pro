@@ -54,66 +54,75 @@ const DiagnosticResults = () => {
     );
   }
 
-  if (error || !data) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Resultados no encontrados</h1>
-          <p className="text-muted-foreground">{error || "No se pudieron cargar tus resultados del diagnóstico."}</p>
-        </div>
-      </div>
-    );
-  }
+  // Mock data for preview when no submission_id or error
+  const mockData = {
+    email: "preview@optimus.com",
+    claridad_direccion: 7.5,
+    dominio_emocional: 6.2,
+    energia_enfoque: 8.1,
+    autoliderazgo: 5.8,
+    influencia_comunicacion: 7.9,
+    cambio_adaptabilidad: 6.7,
+    area_mas_baja: "autoliderazgo",
+    model_response: "Basado en tu diagnóstico, muestras una fortaleza notable en Energía y Enfoque, lo que indica una excelente capacidad para mantener la concentración y dirigir tu energía hacia objetivos específicos. Sin embargo, tu área de mayor oportunidad está en el Autoliderazgo, donde desarrollar una mayor conciencia de tus patrones de pensamiento y comportamiento te permitirá liderar con mayor autenticidad y efectividad. Te recomendamos enfocarte en prácticas de autoconocimiento y desarrollo de la inteligencia emocional para fortalecer esta dimensión fundamental del liderazgo mental.",
+    entrenamientos_recomendados: {
+      nombre_entrenamiento: "Por qué terminan las rachas ganadoras",
+      link_entrenamiento: "https://entrenamiento.com/rachas"
+    }
+  };
+
+  const displayData = data || mockData;
+  const isPreview = !data;
 
   const radarData = [
     {
       area: "Visión y Claridad",
-      value: data.claridad_direccion,
+      value: displayData.claridad_direccion,
       fullValue: 10
     },
     {
       area: "Manejo de la Presión y del Estrés", 
-      value: data.dominio_emocional,
+      value: displayData.dominio_emocional,
       fullValue: 10
     },
     {
       area: "Energía y Enfoque",
-      value: data.energia_enfoque,
+      value: displayData.energia_enfoque,
       fullValue: 10
     },
     {
       area: "Liderazgo",
-      value: data.autoliderazgo,
+      value: displayData.autoliderazgo,
       fullValue: 10
     },
     {
       area: "Influencia y Comunicación",
-      value: data.influencia_comunicacion,
+      value: displayData.influencia_comunicacion,
       fullValue: 10
     },
     {
       area: "Adaptabilidad y Cambio",
-      value: data.cambio_adaptabilidad,
+      value: displayData.cambio_adaptabilidad,
       fullValue: 10
     }
   ];
 
   const pillars = [
-    { name: "Visión y Claridad", score: data.claridad_direccion, key: "claridad_direccion" },
-    { name: "Manejo de la Presión y del Estrés", score: data.dominio_emocional, key: "dominio_emocional" },
-    { name: "Enfoque y Energía", score: data.energia_enfoque, key: "energia_enfoque" },
-    { name: "Liderazgo", score: data.autoliderazgo, key: "autoliderazgo" },
-    { name: "Influencia y comunicación", score: data.influencia_comunicacion, key: "influencia_comunicacion" },
-    { name: "Adaptabilidad y Cambio", score: data.cambio_adaptabilidad, key: "cambio_adaptabilidad" }
+    { name: "Visión y Claridad", score: displayData.claridad_direccion, key: "claridad_direccion" },
+    { name: "Manejo de la Presión y del Estrés", score: displayData.dominio_emocional, key: "dominio_emocional" },
+    { name: "Enfoque y Energía", score: displayData.energia_enfoque, key: "energia_enfoque" },
+    { name: "Liderazgo", score: displayData.autoliderazgo, key: "autoliderazgo" },
+    { name: "Influencia y comunicación", score: displayData.influencia_comunicacion, key: "influencia_comunicacion" },
+    { name: "Adaptabilidad y Cambio", score: displayData.cambio_adaptabilidad, key: "cambio_adaptabilidad" }
   ];
 
   const averageScore = pillars.reduce((sum, pillar) => sum + pillar.score, 0) / pillars.length;
-  const weakestPillar = pillars.find(pillar => pillar.key === data.area_mas_baja) || pillars.reduce((min, pillar) => pillar.score < min.score ? pillar : min);
+  const weakestPillar = pillars.find(pillar => pillar.key === displayData.area_mas_baja) || pillars.reduce((min, pillar) => pillar.score < min.score ? pillar : min);
   
   // Use the training from database if available, otherwise fallback to hardcoded
-  const recommendedTraining = data.entrenamientos_recomendados ? {
-    title: data.entrenamientos_recomendados.nombre_entrenamiento,
-    url: data.entrenamientos_recomendados.link_entrenamiento
+  const recommendedTraining = displayData.entrenamientos_recomendados ? {
+    title: displayData.entrenamientos_recomendados.nombre_entrenamiento,
+    url: displayData.entrenamientos_recomendados.link_entrenamiento
   } : trainingLinks[weakestPillar.name as keyof typeof trainingLinks];
 
   const getZoneInfo = (score: number) => {
@@ -151,6 +160,16 @@ const DiagnosticResults = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+      {/* Preview Banner */}
+      {isPreview && (
+        <div className="bg-warning/20 border-b border-warning/30 px-4 py-3">
+          <div className="max-w-6xl mx-auto text-center">
+            <p className="text-sm font-medium text-warning">
+              ⚠️ Modo Preview: Estos son datos de ejemplo para visualización
+            </p>
+          </div>
+        </div>
+      )}
       {/* Hero Header with Logo */}
       <div className="bg-primary text-white py-16 px-4 mb-12">
         <div className="max-w-4xl mx-auto text-center">
@@ -338,7 +357,7 @@ const DiagnosticResults = () => {
         </div>
 
         {/* AI Analysis Section */}
-        {data.model_response && (
+        {displayData.model_response && (
           <Card className="mb-16 bg-gradient-to-br from-accent/5 via-white to-accent/10 border-2 border-accent/20 shadow-lg">
             <CardHeader className="text-center pb-6">
               <div className="flex justify-center mb-4">
@@ -356,7 +375,7 @@ const DiagnosticResults = () => {
                 <div className="bg-white/50 backdrop-blur-sm p-8 rounded-xl border border-accent/20">
                   <div className="prose prose-lg max-w-none">
                     <div className="whitespace-pre-wrap text-foreground leading-relaxed font-medium text-lg">
-                      {data.model_response}
+                      {displayData.model_response}
                     </div>
                   </div>
                 </div>

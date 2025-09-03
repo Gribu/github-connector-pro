@@ -18,19 +18,36 @@ const Entrenamiento = () => {
     );
   }
 
-  if (error || !data) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Entrenamiento no encontrado</h1>
-          <p className="text-muted-foreground">{error || "No se pudo cargar tu entrenamiento recomendado."}</p>
-        </div>
-      </div>
-    );
-  }
+  // Mock data for preview when no submission_id or error
+  const mockData = {
+    nombre_entrenamiento: "Por qué terminan las rachas ganadoras",
+    descripcion: "Las rachas ganadoras terminan cuando perdemos la perspectiva de lo que realmente las creó. En este entrenamiento profundo, explorarás los mecanismos psicológicos que sostienen el éxito consistente y cómo mantener la mentalidad ganadora incluso en momentos de adversidad. Aprenderás a identificar las señales tempranas de declive en el rendimiento y desarrollarás estrategias concretas para renovar tu energía mental y emocional. Este no es solo un entrenamiento sobre ganar, sino sobre crear sistemas mentales que te permitan mantener la excelencia a largo plazo.",
+    link_entrenamiento: `<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000;">
+      <iframe 
+        src="https://player.vimeo.com/video/sample" 
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
+        frameborder="0" 
+        allow="autoplay; fullscreen; picture-in-picture" 
+        allowfullscreen>
+      </iframe>
+    </div>`
+  };
+
+  const displayData = data || mockData;
+  const isPreview = !data;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+      {/* Preview Banner */}
+      {isPreview && (
+        <div className="bg-warning/20 border-b border-warning/30 px-4 py-3">
+          <div className="max-w-4xl mx-auto text-center">
+            <p className="text-sm font-medium text-warning">
+              ⚠️ Modo Preview: Este es contenido de ejemplo para visualización
+            </p>
+          </div>
+        </div>
+      )}
       {/* Header with Logo */}
       <div className="bg-primary text-white py-16 px-4 mb-12">
         <div className="max-w-4xl mx-auto text-center">
@@ -51,20 +68,20 @@ const Entrenamiento = () => {
         {/* Training Content */}
         <div className="mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-primary mb-8 text-center">
-            {data.nombre_entrenamiento}
+            {displayData.nombre_entrenamiento}
           </h2>
           
           <div className="bg-white/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-primary/10 mb-8">
             <p className="text-lg text-foreground leading-relaxed">
-              {data.descripcion}
+              {displayData.descripcion}
             </p>
           </div>
 
           {/* Training Video */}
-          {data.link_entrenamiento && (
+          {displayData.link_entrenamiento && (
             <div className="mb-12">
               <div 
-                dangerouslySetInnerHTML={{ __html: data.link_entrenamiento }}
+                dangerouslySetInnerHTML={{ __html: displayData.link_entrenamiento }}
                 className="w-full"
               />
             </div>
