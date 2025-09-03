@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useEffect, useState } from "react";
 import { 
   Eye, 
   Heart, 
@@ -15,7 +15,7 @@ import {
 import ExampleRadarChart from "@/components/ExampleRadarChart";
 
 const Index = () => {
-  const navigate = useNavigate();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   
   useEffect(() => {
     // Cargar script de Tally
@@ -78,7 +78,7 @@ const Index = () => {
   }, []);
 
   const openDiagnosticForm = () => {
-    navigate('/diagnostico');
+    setIsDialogOpen(true);
   };
 
   const pillars = [
@@ -149,7 +149,9 @@ const Index = () => {
               Descubre tu pilar más débil y accede a un entrenamiento gratuito para fortalecerlo.
             </p>
             <Button 
-              onClick={openDiagnosticForm}
+              data-tally-open="mV6oJa" 
+              data-tally-emoji-text="👋" 
+              data-tally-emoji-animation="wave"
               size="lg"
               className="bg-warning hover:bg-warning/90 text-warning-foreground font-montserrat font-bold px-10 py-6 text-lg rounded-full shadow-2xl hover:shadow-warning/25 transition-all duration-300 transform hover:scale-105 mb-8"
             >
@@ -185,7 +187,9 @@ const Index = () => {
               Descubre tu pilar más débil y accede a un entrenamiento gratuito para fortalecerlo.
             </p>
             <Button 
-              onClick={openDiagnosticForm}
+              data-tally-open="mV6oJa" 
+              data-tally-emoji-text="👋" 
+              data-tally-emoji-animation="wave"
               size="lg"
               className="bg-warning hover:bg-warning/90 text-warning-foreground font-montserrat font-bold px-10 py-6 text-lg rounded-full shadow-2xl hover:shadow-warning/25 transition-all duration-300 transform hover:scale-105"
             >
@@ -290,7 +294,9 @@ const Index = () => {
             </p>
             <div className="mt-8 flex justify-center">
               <Button 
-                onClick={openDiagnosticForm}
+                data-tally-open="mV6oJa" 
+                data-tally-emoji-text="👋" 
+                data-tally-emoji-animation="wave"
                 size="lg"
                 className="bg-warning hover:bg-warning/90 text-warning-foreground font-montserrat font-bold px-10 py-6 text-lg rounded-full shadow-2xl hover:shadow-warning/25 transition-all duration-300 transform hover:scale-105"
               >
@@ -302,6 +308,29 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Formulario Popup */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-montserrat font-bold text-center mb-4">
+              Completa tu Diagnóstico de Liderazgo Mental
+            </DialogTitle>
+          </DialogHeader>
+          <div className="mt-4">
+            <iframe 
+              data-tally-src="https://tally.so/embed/mV6oJa?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" 
+              loading="lazy"
+              width="100%" 
+              height="600" 
+              frameBorder={0} 
+              marginHeight={0} 
+              marginWidth={0} 
+              title="Pilares del Emprendedor"
+              className="w-full"
+            ></iframe>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Footer */}
       <footer className="py-16 px-4 bg-primary">
