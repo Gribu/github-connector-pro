@@ -67,7 +67,7 @@ export default function ProcesandoDiagnostico() {
     const interval = setInterval(checkForDiagnosticResult, 5000);
 
     return () => clearInterval(interval);
-  }, [submissionId, attempts]);
+  }, [submissionId]);
 
   if (!submissionId) {
     return null;
