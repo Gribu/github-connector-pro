@@ -95,9 +95,9 @@ const Entrenamiento = () => {
             Sabes en qué necesitas trabajar. Lo que sigue es decidir cuándo empezar.
           </p>
           
-          <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-            Agenda tu sesión con uno de nuestros coaches expertos y activa el entrenamiento que más impacto puede tener en tu mentalidad, tu dirección y tu negocio.
-          </p>
+          <h3 className="text-2xl font-bold text-foreground mb-8 leading-relaxed">
+            Agenda tu Sesión con uno de nuestros Coaches Expertos
+          </h3>
 
           {/* Booking Iframe */}
           <div className="max-w-full">
